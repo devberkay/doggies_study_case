@@ -1,9 +1,13 @@
 import 'package:dog_appnation/pages/home/home_page.dart';
+import 'package:dog_appnation/pages/input_modal/input_modal.dart';
+import 'package:dog_appnation/pages/settings_modal/settings_page.dart';
 import 'package:dog_appnation/pages/shared_scaffold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:io';
+
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 final GlobalKey<NavigatorState> _shellNavigator =
@@ -48,7 +52,35 @@ class GoRouterSingleton {
                         key: state.pageKey,
                         child: HomePage(
                           key: state.pageKey,
-                        ))),
+                        )),
+                routes: [
+                  GoRoute(
+                      path: "inputModal",
+                      name: "inputModal",
+                      pageBuilder: (context, state) => ModalSheetPage(
+                          key: state.pageKey,
+                          barrierDismissible: true,
+                          maintainState: false,
+                          child: InputModal(
+                            textController:
+                                state.extra as TextEditingController,
+                          )),
+                      ),
+                  GoRoute(
+                            path: "settings",
+                            name: "settings",
+                            pageBuilder: (context, state) => ModalSheetPage(
+                                key: state.pageKey,
+                                barrierColor: Colors.transparent,
+                                barrierDismissible: true,
+                                child: SheetDismissible(
+                                  onDismiss: () {
+                                    
+                                    return true;
+                                  },
+                                  child: const SettingsModal(),
+                                )))
+                ]),
           ],
         ),
       ],
@@ -60,6 +92,3 @@ class GoRouterSingleton {
   static final GoRouterSingleton _instance =
       GoRouterSingleton._singletonContractor();
 }
-
-
-// appl_sbepvGqPeJxOBehWydvXjUSLzNu

@@ -1,46 +1,64 @@
+import 'package:dog_appnation/pages/common/nav_bar_painter.dart';
 import 'package:dog_appnation/pages/common/nav_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomNavBar extends StatelessWidget {
-  const CustomNavBar({super.key});
+class CustomNavBar extends StatefulWidget {
+  const CustomNavBar({super.key, required this.navBarIndex});
+  final int navBarIndex;
+  @override
+  State<CustomNavBar> createState() => _CustomNavBarState();
+}
+
+class _CustomNavBarState extends State<CustomNavBar> {
+  late final TextEditingController _textController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 80,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-                child: NavButton(
-              activeIcon: Icons.home_filled,
-              icon: Icons.home,
-              title: "Home",
-              onTap: () {
-                context.goNamed("home");
-              },
-            )),
-            Container(
-              width: 2,
-            ),
-            Expanded(
-                child: NavButton(
-                    activeIcon: Icons.home_filled,
-                    icon: Icons.home,
-                    title: "Settings",onTap: () {
-                      context.goNamed("settings");
-                    },)),
-          ],
-        ));
+    return RepaintBoundary(
+      child: CustomPaint(
+          painter: NavbarPainter(),
+          isComplex: true,
+          size: Size(double.maxFinite, kBottomNavigationBarHeight * 1.75),
+          child: Row(
+            children: [
+              Expanded(
+                  child: NavButton(
+                activeIcon: Icons.home_filled,
+                icon: Icons.home_outlined,
+                isActive: widget.navBarIndex == 0,
+                title: "Home",
+                onTap: () {
+                  debugPrint("go to settings");
+                  context.goNamed("home");
+                },
+              )),
+              Container(
+                width: 2,
+                height: kBottomNavigationBarHeight / 2,
+                decoration: ShapeDecoration(
+                  shape: StadiumBorder(),
+                  color: Color(0xFFD1D1D6),
+                ),
+              ),
+              Expanded(
+                  child: NavButton(
+                      activeIcon: Icons.build_sharp,
+                      icon: Icons.build_outlined,
+                      isActive: widget.navBarIndex == 1,
+                      title: "Settings",
+                      onTap: () {
+                        debugPrint("go to settings");
+                        context.goNamed("settings");
+                      })),
+            ],
+          )),
+    );
   }
 }
