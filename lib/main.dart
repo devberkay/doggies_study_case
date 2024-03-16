@@ -1,8 +1,14 @@
 import 'package:dog_appnation/model/router/go_router_singleton.dart';
+import 'package:dog_appnation/service/path_singleton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  PathSingleton().setAppDir = (await getTemporaryDirectory()).path;
   runApp(const DoggnationApp());
 }
 

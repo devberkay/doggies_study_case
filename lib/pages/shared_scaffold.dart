@@ -1,8 +1,13 @@
+import 'package:dog_appnation/model/api/dog_breed_model.dart';
 import 'package:dog_appnation/pages/common/custom_nav_bar.dart';
 import 'package:dog_appnation/pages/common/floating_search_button.dart';
 import 'package:dog_appnation/pages/common/nav_bar_painter.dart';
 import 'package:dog_appnation/pages/common/scroll_custom_behavior.dart';
+import 'package:dog_appnation/service/dog_breed_bloc.dart';
+import 'package:dog_appnation/service/dog_image_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 
 class SharedScaffold extends StatefulWidget {
@@ -31,32 +36,54 @@ class _SharedScaffoldState extends State<SharedScaffold> {
     final isHome = widget.routerState.fullPath == "/";
     final isSettings = widget.routerState.fullPath == "/settings";
     final navBarIndex = isSettings ? 1 : 0;
-    return Scaffold(
-      extendBody: true,
-      backgroundColor: Colors.white,
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: widget.child,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: isHome
-          ? FloatingSearchButton(
-              textController: _textEditingController,
-            )
-          : null,
-      bottomNavigationBar: isSettings
-          ? null
-          : SizedBox(
-              height: kBottomNavigationBarHeight * 1.75,
-              width: double.maxFinite,
-              child: CustomNavBar(navBarIndex: navBarIndex)),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          "Doggnation",
-          style: TextStyle(fontWeight: FontWeight.w600),
+
+    return BlocProvider(
+      create: (BuildContext context) => DogBreedBloc()..add(AppInitializing()),
+      lazy: false,
+      child: BlocListener<DogBreedBloc, DogBreedBlocState>(
+        listener: (context, state) {
+          if (state is DogBreedLoading) {
+            debugPrint("DogBreedLoading");
+          } else if (state is DogBreedData) {
+            debugPrint("DogBreedData: ${state.breeds.length}");
+            if (state.breeds.isNotEmpty) {
+              FlutterNativeSplash.remove();
+            }
+          } else if (state is DogBreedError) {
+            debugPrint("DogBreedError: ${state.error}\n\n ${state.stackTrace}");
+            context.read<DogBreedBloc>().add(AppInitializing()); // try fetching again
+          }
+        },
+        // bloc: DogBreedBloc(),
+        child: Scaffold(
+          extendBody: true,
+          backgroundColor: Colors.white,
+          body: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: widget.child,
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: isHome
+              ? FloatingSearchButton(
+                  textController: _textEditingController,
+                )
+              : null,
+          bottomNavigationBar: isSettings
+              ? null
+              : SizedBox(
+                  height: kBottomNavigationBarHeight * 1.75,
+                  width: double.maxFinite,
+                  child: CustomNavBar(navBarIndex: navBarIndex)),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            title: const Text(
+              "Doggnation",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
         ),
       ),
     );

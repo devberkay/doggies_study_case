@@ -41,6 +41,7 @@ dependencies:
   smooth_sheets: ^0.3.4
   http: ^1.2.1
   flutter_native_splash: ^2.3.13
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
