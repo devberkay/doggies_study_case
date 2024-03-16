@@ -5,6 +5,7 @@ import 'package:dog_appnation/pages/common/nav_bar_painter.dart';
 import 'package:dog_appnation/pages/common/scroll_custom_behavior.dart';
 import 'package:dog_appnation/service/dog_breed_bloc.dart';
 import 'package:dog_appnation/service/dog_image_bloc.dart';
+import 'package:dog_appnation/service/dog_search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -35,11 +36,20 @@ class _SharedScaffoldState extends State<SharedScaffold> {
     debugPrint("routerState-fullPath: ${widget.routerState.fullPath}");
     final isHome = widget.routerState.fullPath == "/";
     final isSettings = widget.routerState.fullPath == "/settings";
+    final isDialog = widget.routerState.fullPath?.contains("Dialog") ?? false;
+    final isInputModal =
+        widget.routerState.fullPath?.contains("inputModal") ?? false;
     final navBarIndex = isSettings ? 1 : 0;
 
-    return BlocProvider(
-      create: (BuildContext context) => DogBreedBloc()..add(AppInitializing()),
-      lazy: false,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<DogBreedBloc>(
+          create: (context) => DogBreedBloc()..add(AppInitializing()),
+        ),
+        BlocProvider<DogSearchBloc>(
+          create: (context) => DogSearchBloc(),
+        )
+      ],
       child: BlocListener<DogBreedBloc, DogBreedBlocState>(
         listener: (context, state) {
           if (state is DogBreedLoading) {
@@ -51,12 +61,14 @@ class _SharedScaffoldState extends State<SharedScaffold> {
             }
           } else if (state is DogBreedError) {
             debugPrint("DogBreedError: ${state.error}\n\n ${state.stackTrace}");
-            context.read<DogBreedBloc>().add(AppInitializing()); // try fetching again
+            context
+                .read<DogBreedBloc>()
+                .add(AppInitializing()); // try fetching again
           }
         },
         // bloc: DogBreedBloc(),
         child: Scaffold(
-          extendBody: true,
+          extendBody: true, // !isInputModal
           backgroundColor: Colors.white,
           body: Container(
             decoration: const BoxDecoration(
@@ -79,6 +91,7 @@ class _SharedScaffoldState extends State<SharedScaffold> {
                   child: CustomNavBar(navBarIndex: navBarIndex)),
           appBar: AppBar(
             backgroundColor: Colors.white,
+            centerTitle: true,
             title: const Text(
               "Doggnation",
               style: TextStyle(fontWeight: FontWeight.w600),

@@ -24,4 +24,21 @@ class ApiImgResponseModel {
   String toJson() => json.encode(toMap());
 
   factory ApiImgResponseModel.fromJson(String source) => ApiImgResponseModel.fromMap(json.decode(source));
+
+  
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is ApiImgResponseModel &&
+      other.message == message &&
+      other.status == status;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        message,
+        status
+      );
 }

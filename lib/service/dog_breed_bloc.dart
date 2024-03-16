@@ -45,7 +45,7 @@ class DogBreedBloc extends Bloc<DogBreedBlocEvent, DogBreedBlocState> {
         final breedModels = breedsMap.entries
             .mapIndexed((index, e) => DogBreedModel(
                   breed: StringUtils.capitalize(e.key),
-                  subBreeds: e.value,
+                  subBreeds: (e.value).map((e) => StringUtils.capitalize(e)).toList(),
                   imageUrl: imageUrls[index],
                 ))
             .toList();

@@ -38,9 +38,9 @@ class _FloatingSearchButtonState extends State<FloatingSearchButton> {
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 5,
-                  spreadRadius: 1,
+                  color: Colors.black.withOpacity(0.16),
+                  blurRadius: 16,
+                  spreadRadius: 0,
                   blurStyle: BlurStyle.outer,
                 )
               ],

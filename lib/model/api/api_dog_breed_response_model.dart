@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class ApiDogBreedResponseModel {
   final Map<String, List<String>> message;
   final String status;
@@ -30,4 +32,16 @@ class ApiDogBreedResponseModel {
 
   factory ApiDogBreedResponseModel.fromJson(String source) => 
     ApiDogBreedResponseModel.fromMap(json.decode(source));
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is ApiDogBreedResponseModel &&
+      mapEquals(other.message, message) &&
+      other.status == status;
+  }
+
+  @override
+  int get hashCode => message.hashCode ^ status.hashCode;
 }

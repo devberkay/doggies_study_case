@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:dog_appnation/model/api/dog_breed_model.dart';
 import 'package:dog_appnation/service/path_singleton.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as path;
 
 class DogContainer extends StatelessWidget {
@@ -14,10 +15,11 @@ class DogContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final imgTempDirPath =
         "${PathSingleton().appDir}/${path.basename(dogBreedModel.imageUrl)}";
-    
+
     return GestureDetector(
       onTap: () {
         debugPrint("dogContainer pressed");
+        context.goNamed("breedDetailDialog",extra:dogBreedModel);
       },
       child: LayoutBuilder(builder: (context, constraints) {
         return Stack(
@@ -62,7 +64,7 @@ class DogContainer extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.24),
+                            color: Colors.black.withOpacity(0.3),
                             borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(8),
                               topRight: Radius.circular(8),
