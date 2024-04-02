@@ -1,4 +1,4 @@
-# dog_appnation
+# doggies_study_case
 
 A new Flutter project.
 
