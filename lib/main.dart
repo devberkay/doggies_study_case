@@ -10,7 +10,7 @@ Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   PathSingleton().setAppDir = (await getTemporaryDirectory()).path;
-  await OsVersionService().readVersion(); 
+  await OsVersionService().readVersion();
   runApp(const DoggnationApp());
 }
 
